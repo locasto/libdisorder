@@ -1,0 +1,5 @@
+
+[20100308] Add a command line tool for reporting entropy of a file
+[20100308] supply file argument 
+[20100308] supply verbose argument
+[XXX] supply parameter for selecting entropy measure
