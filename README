@@ -3,11 +3,11 @@ byte streams and other data.
 
 The homepage is:
 
-     http://libdisoder.freshdefense.net
+     http://libdisorder.freshdefense.net
 
 You can also retrieve the code from:
 
-     http://code.dyne.org/
+     http://code.dyne.org/?r=libdisorder
 
 Plans include adding new entropy measurement functions as well as a module
 for supporting the parsing or chunking of data format tokens (for example,
