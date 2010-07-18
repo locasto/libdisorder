@@ -4,16 +4,18 @@ $Id$
 
 This is a readme file. See 
 
-     http://www.cs.gmu.edu/~mlocasto/research/libdisorder
+     http://libdisorder.freshdefense.net/
 
 for more information.
 
 libdisorder is a small, simple C library for use by programmars in
 other programs. There is a small test program included that opens
-/dev/urandom and calls libdisorder.
+/dev/urandom and calls libdisorder in the `test/' directory. There is
+also a command-line tool, `ropy' in the `tool/' directory for reporting
+on the entropy of normal files.
 
 You will probably want to pipe the output of libdisorder to some other
-math analysis or graphing environment. In *nix, you can use gnuplot.
+math analysis or graphing environment (e.g., gnuplot).
 
 The library's primary function reports entropy in bits: essentially,
 this is the number of bits necessary to encode the actual level of

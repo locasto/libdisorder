@@ -1,5 +1,16 @@
-
+[XXX] supply parameter for selecting entropy measure
+[XXX] generally improve cmd-line args handling, use getopt()
+[XXX] package as debian and/or fedora
+[XXX] write some documentation (man pages, etc.)
+[XXX] add additional entropy measurement functions
+[XXX] add stream or other data sources
+[XXX] add API for "chunking" tokens (a la AWK)
+---
+[20100717] Add this codebase to gitub repo
+[20100716] move web site from gmu.edu to freshdefense.net
+[20100716] create github account
+---
 [20100308] Add a command line tool for reporting entropy of a file
 [20100308] supply file argument 
 [20100308] supply verbose argument
-[XXX] supply parameter for selecting entropy measure
+
