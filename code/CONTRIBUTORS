@@ -1,15 +1,18 @@
 libdisorder Contributors
 $Id$
-==================================================================
+=====================================================================
 
-libdisorder was originally written and produced by Michael E. Locasto 
+libdisorder was originally written and produced by Michael E. Locasto
 <michael@freshdefense.net>
 
 The first version of libdisorder was produced on March 4th, 2010.
 
-Other contributions include:
-
-<NAME> (MAIL)    :: \nContribution...
-Michael E. Locasto (michael@freshdefense.net) ::
+---------------------------------------------------------------------
+Michael E. Locasto (michael @ freshdefense.net) ::
  Created first version and set up website.
-
+Kevin Lo (kevlo.org) ::
+ Submitted patch for Makefile to use libm and using log2 on BSD, 
+ OpenBSD and FreeBSD ports maintainer.
+Jaromil http://jaromil.dyne.org/journal/who.html ::
+ Hosting code at dyne.org git repo,
+ Debian package maintainer

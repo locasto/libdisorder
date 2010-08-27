@@ -1,6 +1,6 @@
 LDFLAGS=-L../lib -L/usr/lib
 INCLUDES=-I/usr/include -I../include
-LIBS=-ldisorder
+LIBS=-ldisorder -lm
 #OPTS=-Wall -g -pg
 OPTS=-Wall -g
 TESTOUT=../test/testexec
