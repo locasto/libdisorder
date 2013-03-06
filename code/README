@@ -11,11 +11,14 @@ for more information.
 libdisorder is a small, simple C library for use by programmars in
 other programs. There is a small test program included that opens
 /dev/urandom and calls libdisorder in the `test/' directory. There is
-also a command-line tool, `ropy' in the `tool/' directory for reporting
-on the entropy of normal files.
+also a command-line tool, `ropy' in the `tools/' directory for reporting
+on the total entropy of normal files. `tropy' in `tools/' will report
+entropy per BLOCKSIZE for the file.
 
 You will probably want to pipe the output of libdisorder to some other
-math analysis or graphing environment (e.g., gnuplot).
+math analysis or graphing environment (e.g., gnuplot). For example:
+   ./test/testexec |dd bs=62 count=1000|gnuplot -e 'plot "-" using 2:4;'
+   ./tools/tropy /bin/ls | gnuplot -e 'plot "-" using 2:4;'
 
 The library's primary function reports entropy in bits: essentially,
 this is the number of bits necessary to encode the actual level of
