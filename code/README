@@ -17,8 +17,8 @@ entropy per BLOCKSIZE for the file.
 
 You will probably want to pipe the output of libdisorder to some other
 math analysis or graphing environment (e.g., gnuplot). For example:
-   ./test/testexec |dd bs=62 count=1000|gnuplot -e 'plot "-" using 2:4;'
-   ./tools/tropy /bin/ls | gnuplot -e 'plot "-" using 2:4;'
+   ./test/testexec |dd bs=62 count=1000|gnuplot -p -e 'plot "-" using 2:4;'
+   ./tools/tropy /bin/ls | gnuplot -p -e 'plot "-" using 2:4;'
 
 The library's primary function reports entropy in bits: essentially,
 this is the number of bits necessary to encode the actual level of
