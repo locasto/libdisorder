@@ -135,9 +135,10 @@ main(int argc,
 
   entropy_value = shannon_H(buffer, how_many_bytes_read);
   fprintf(stdout,
-	  "tokens: %d entropy: %f maxent: %f ratio: %f\n",
+	  "tokens: %d entropy: %f metric: %f maxent: %f ratio: %f\n",
 	  get_num_tokens(),
 	  entropy_value,
+          entropy_value/how_many_bytes_read,
 	  get_max_entropy(),
 	  get_entropy_ratio()
 	  );
