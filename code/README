@@ -8,7 +8,7 @@ This is a readme file. See
 
 for more information.
 
-libdisorder is a small, simple C library for use by programmars in
+libdisorder is a small, simple C library for use by programmers in
 other programs. There is a small test program included that opens
 /dev/urandom and calls libdisorder in the `test/' directory. There is
 also a command-line tool, `ropy' in the `tool/' directory for reporting
