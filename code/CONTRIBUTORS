@@ -16,3 +16,5 @@ Kevin Lo (kevlo.org) ::
 Jaromil http://jaromil.dyne.org/journal/who.html ::
  Hosting code at dyne.org git repo,
  Debian package maintainer
+Gokturk Yuksek (gokturk at binghamton.edu) ::
+ Patch ropy to calculate block device sizes correctly.

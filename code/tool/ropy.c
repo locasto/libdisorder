@@ -23,6 +23,7 @@
 
 #include "../include/disorder.h"
 #include <sys/stat.h> // to get file size in bytes for buffer
+#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -103,7 +104,17 @@ main(int argc,
     perror("main(): problem invoking fstat() of file");
   }
 
-  file_size = (long long)stat_fd.st_size;
+  /* Handle regular files and block devices differently */
+  if (S_ISREG(stat_fd.st_mode)) {
+    file_size = (long long)stat_fd.st_size;
+  } else if (S_ISBLK(stat_fd.st_mode)) {
+    /*
+     * st_size does not work for block devices
+     * seek to the end to determine size
+     */
+    file_size = (long long)lseek(fildes, 0, SEEK_END);
+    lseek(fildes, 0, SEEK_SET); /* Seek back to the beginning */
+  }
 
   if(verbose)
     fprintf(stdout,
