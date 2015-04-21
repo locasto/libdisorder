@@ -24,8 +24,9 @@
 #include <math.h> //for log2()
 #include <stdio.h> //for NULL
 #include "../include/disorder.h"
+#include "../config.h"
 
-#if defined(__FreeBSD__)
+#if !(HAVE_LOG2)
 #define        log2(x) (log((x)) * (1./M_LN2))
 #endif
 

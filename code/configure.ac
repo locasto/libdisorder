@@ -19,7 +19,10 @@ AC_CHECK_HEADERS([stdlib.h string.h math.h])
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
-AC_CHECK_LIB([m], [log2], , [CPPFLAGS=" -D__FreeBSD__ "])
+AC_SEARCH_LIBS([log2], [m],
+		    [AC_DEFINE([HAVE_LOG2], [1],
+				[Define to 1 if log2() is available, else 0])],
+		    [AC_DEFINE([HAVE_LOG2], [0])])
 
 # Optional features
 AC_ARG_ENABLE([ropy],
