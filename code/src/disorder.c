@@ -140,21 +140,3 @@ shannon_H(struct entropy_ctl *ctl, char* buf, long long length)
 
   return bits;
 }
-
-int 
-get_num_tokens(struct entropy_ctl *ctl)
-{
-  return ctl->m_num_tokens;
-}
-
-float 
-get_max_entropy(struct entropy_ctl *ctl)
-{
-  return ctl->m_maxent;
-}
-
-float 
-get_entropy_ratio(struct entropy_ctl *ctl)
-{
-  return ctl->m_ratio;
-}

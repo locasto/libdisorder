@@ -60,12 +60,21 @@ float    shannon_H(struct entropy_ctl *, char*, long long);
     number of individual events seen. For example, if the library sees
     the string `aaab', the number of events is 4 and the number of
     tokens is 2. */
-int      get_num_tokens(struct entropy_ctl *);
+static inline int get_num_tokens(struct entropy_ctl *ctl)
+{
+  return ctl->m_num_tokens;
+}
 
 /** Returns maximum entropy for byte distributions log2(256)=8 bits*/
-float    get_max_entropy(struct entropy_ctl *);
+static inline float get_max_entropy(struct entropy_ctl *ctl)
+{
+  return ctl->m_maxent;
+}
 
 /** Returns the ratio of entropy to maxentropy */
-float    get_entropy_ratio(struct entropy_ctl *);
+static inline float get_entropy_ratio(struct entropy_ctl *ctl)
+{
+  return ctl->m_ratio;
+}
 
 #endif
