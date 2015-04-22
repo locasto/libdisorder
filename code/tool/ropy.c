@@ -117,7 +117,7 @@ main(int argc,
 	    "file size: %lld (bytes)\n",
 	    file_size);
 
-  buffer = (char*)calloc(file_size, sizeof(char));
+  buffer = (char*)malloc(file_size * sizeof(char));
   if(NULL==buffer)
   {
     perror("main(): problem allocating buffer");
