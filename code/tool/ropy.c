@@ -61,11 +61,7 @@ main(int argc,
   struct stat stat_fd;
   long long file_size;
   char* buffer = NULL;
-  unsigned char c;
-  int x = 0;
-  char* itr=NULL;
   //long long i = 0;
-  long long how_many_bytes_read = 0L;
   int ret = 0;
   int verbose = 0; //be quiet by default
 
@@ -128,28 +124,21 @@ main(int argc,
     return -2;
   }
 
-  //read the file into the buffer
-  itr = buffer;
-  //for(i=0;i<file_size;i++) //could also read until EOF
-  while(EOF!=(x=fgetc(fin)))
-  {
-    //x = fgetc(fin);
-    c = (unsigned char)x;
-    *itr = c;
-    itr++;
-    how_many_bytes_read++;
+  if (!fread(buffer, file_size, 1, fin)) {
+    perror("main: can't read the file");
+    return -1;
   }
   if(verbose)
     fprintf(stdout,
 	    "read %lld bytes\n",
-	    how_many_bytes_read);
+	    file_size);
 
-  entropy_value = shannon_H(buffer, how_many_bytes_read);
+  entropy_value = shannon_H(buffer, file_size);
   fprintf(stdout,
 	  "tokens: %d entropy: %f metric: %f maxent: %f ratio: %f\n",
 	  get_num_tokens(),
 	  entropy_value,
-          entropy_value/how_many_bytes_read,
+          entropy_value/file_size,
 	  get_max_entropy(),
 	  get_entropy_ratio()
 	  );
