@@ -36,25 +36,6 @@ static float m_token_probs[LIBDO_MAX_BYTES]; //P(each token appearing)
 static int m_num_tokens = 0; //actual number of `seen' tokens, max 256 
 static float m_maxent = 0.0;
 static float m_ratio = 0.0;
-static int LIBDISORDER_INITIALIZED = 0;
-
-static void
-initialize_lib()
-{
-  int i = 0;
-  if(1==LIBDISORDER_INITIALIZED)
-    return;
-
-  m_num_tokens = 0;
-
-  for(i=0;i<LIBDO_MAX_BYTES;i++)
-  {
-    m_token_freqs[i]=0;
-    m_token_probs[i]=0.0;
-  }
-
-  LIBDISORDER_INITIALIZED = 1;
-}
 
 /**
  * Set m_num_tokens by iterating over m_token_freq[] and maintaining
@@ -136,9 +117,6 @@ shannon_H(char* buf,
 
   if(NULL==buf || 0==length)
     return 0.0;
-
-  if(0==LIBDISORDER_INITIALIZED)
-    initialize_lib();
 
   itr = buf;
   m_maxent = 0.0;
