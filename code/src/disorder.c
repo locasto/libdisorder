@@ -30,30 +30,19 @@
 #define        log2(x) (log((x)) * (1./M_LN2))
 #endif
 
-/** Frequecies for each byte */
-static int m_token_freqs[LIBDO_MAX_BYTES]; //frequency of each token in sample
-static float m_token_probs[LIBDO_MAX_BYTES]; //P(each token appearing)
-static int m_num_tokens = 0; //actual number of `seen' tokens, max 256 
-static float m_maxent = 0.0;
-static float m_ratio = 0.0;
-
 /**
  * Set m_num_tokens by iterating over m_token_freq[] and maintaining
  * a counter of each position that does not hold the value of zero.
  */
 static void
-count_num_tokens()
+count_num_tokens(struct entropy_ctl *ctl)
 {
   int i = 0;
   int counter = 0;
   for(i=0;i<LIBDO_MAX_BYTES;i++)
-  {
-    if(0!=m_token_freqs[i])
-    {
+    if(ctl->m_token_freqs[i])
       counter++;
-    }
-  }
-  m_num_tokens = counter;
+  ctl->m_num_tokens = counter;
   return;
 }
 
@@ -64,7 +53,8 @@ count_num_tokens()
  * This function is available only to functions in this file.
  */
 static void
-get_token_frequencies(char* buf, 
+get_token_frequencies(struct entropy_ctl *ctl,
+		      char* buf,
 		      long long length)
 {
   int i=0;
@@ -74,20 +64,20 @@ get_token_frequencies(char* buf,
   itr = buf;
 
   //reset number of tokens
-  m_num_tokens = 0;
+  ctl->m_num_tokens = 0;
 
   //make sure freqency and probability arrays are cleared
   for(i=0;i<LIBDO_MAX_BYTES;i++)
   {
-    m_token_freqs[i] = 0;
-    m_token_probs[i] = 0.0;
+    ctl->m_token_freqs[i] = 0;
+    ctl->m_token_probs[i] = 0.0;
   }
 
   for(i=0;i<length;i++)
   {
     c = (unsigned char)*itr;
     //assert(0<=c<LIBDO_MAX_BYTES);
-    m_token_freqs[c]++;
+    ctl->m_token_freqs[c]++;
     itr++;
   }
 }
@@ -104,8 +94,7 @@ get_token_frequencies(char* buf,
  *    http://php.net/manual/en/control-structures.foreach.php
  */
 float
-shannon_H(char* buf, 
-	  long long length)
+shannon_H(struct entropy_ctl *ctl, char* buf, long long length)
 {
   int i = 0;
   float bits = 0.0;
@@ -119,14 +108,14 @@ shannon_H(char* buf,
     return 0.0;
 
   itr = buf;
-  m_maxent = 0.0;
-  m_ratio = 0.0;
+  ctl->m_maxent = 0.0;
+  ctl->m_ratio = 0.0;
   num_events = length;
-  get_token_frequencies(itr, num_events); //modifies m_token_freqs[]
+  get_token_frequencies(ctl, itr, num_events); //modifies m_token_freqs[]
   //set m_num_tokens by counting unique m_token_freqs entries
-  count_num_tokens(); 
+  count_num_tokens(ctl);
 
-  if(m_num_tokens>LIBDO_MAX_BYTES)
+  if(ctl->m_num_tokens > LIBDO_MAX_BYTES)
   {
     //report error somehow?
     return 0.0;
@@ -136,36 +125,36 @@ shannon_H(char* buf,
   //spots that have a registered token (i.e., freq>0)
   for(i=0;i<LIBDO_MAX_BYTES;i++)
   {
-    if(0!=m_token_freqs[i])
+    if(ctl->m_token_freqs[i])
     {
       token = i;
-      freq = ((float)m_token_freqs[token]); 
-      m_token_probs[token] = (freq / ((float)num_events));
-      entropy += m_token_probs[token] * log2(m_token_probs[token]);
+      freq = ((float)ctl->m_token_freqs[token]);
+      ctl->m_token_probs[token] = (freq / ((float)num_events));
+      entropy += ctl->m_token_probs[token] * log2(ctl->m_token_probs[token]);
     }
   }
 
   bits = -1.0 * entropy;
-  m_maxent = log2(m_num_tokens);
-  m_ratio = bits / m_maxent;
+  ctl->m_maxent = log2(ctl->m_num_tokens);
+  ctl->m_ratio = bits / ctl->m_maxent;
 
   return bits;
 }
 
 int 
-get_num_tokens()
+get_num_tokens(struct entropy_ctl *ctl)
 {
-  return m_num_tokens;
+  return ctl->m_num_tokens;
 }
 
 float 
-get_max_entropy()
+get_max_entropy(struct entropy_ctl *ctl)
 {
-  return m_maxent;
+  return ctl->m_maxent;
 }
 
 float 
-get_entropy_ratio()
+get_entropy_ratio(struct entropy_ctl *ctl)
 {
-  return m_ratio;
+  return ctl->m_ratio;
 }

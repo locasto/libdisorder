@@ -54,6 +54,7 @@ int
 main(int argc, 
      char* argv[])
 {
+  struct entropy_ctl ctl;
   float entropy_value = 0.0;
   char* filename = NULL;
   int fildes = -1;
@@ -133,14 +134,15 @@ main(int argc,
 	    "read %lld bytes\n",
 	    file_size);
 
-  entropy_value = shannon_H(buffer, file_size);
+  memset(&ctl, 0, sizeof(struct entropy_ctl));
+  entropy_value = shannon_H(&ctl, buffer, file_size);
   fprintf(stdout,
 	  "tokens: %d entropy: %f metric: %f maxent: %f ratio: %f\n",
-	  get_num_tokens(),
+	  get_num_tokens(&ctl),
 	  entropy_value,
           entropy_value/file_size,
-	  get_max_entropy(),
-	  get_entropy_ratio()
+	  get_max_entropy(&ctl),
+	  get_entropy_ratio(&ctl)
 	  );
 
   free(buffer);
