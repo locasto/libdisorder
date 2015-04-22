@@ -1,0 +1,3 @@
+language: c
+compiler: gcc
+script: cd code && autoreconf -i && ./configure && make
