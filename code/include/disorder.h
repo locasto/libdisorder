@@ -37,6 +37,15 @@
  */
 #define LIBDO_BUFFER_LEN   16384
 
+/** Main struct to keep track of entropy calculation */
+struct entropy_ctl {
+  int m_token_freqs[LIBDO_MAX_BYTES]; //frequency of each token in sample
+  float m_token_probs[LIBDO_MAX_BYTES]; //P(each token appearing)
+  int m_num_tokens; //actual number of `seen' tokens, max 256
+  float m_maxent;
+  float m_ratio;
+};
+
 /** 
  * Given a pointer to an array of bytes, return a float indicating the
  * level of entropy in bits (a number between zero and eight),
@@ -45,18 +54,27 @@
  * runs into unallocated memory, this function should fail with a
  * SIGSEGV.
  */
-float    shannon_H(char*, long long);
+float    shannon_H(struct entropy_ctl *, char*, long long);
 
 /** Report the number of (unique) tokens seen. This is _not_ the
     number of individual events seen. For example, if the library sees
     the string `aaab', the number of events is 4 and the number of
     tokens is 2. */
-int      get_num_tokens(void);
+static inline int get_num_tokens(struct entropy_ctl *ctl)
+{
+  return ctl->m_num_tokens;
+}
 
 /** Returns maximum entropy for byte distributions log2(256)=8 bits*/
-float    get_max_entropy(void);
+static inline float get_max_entropy(struct entropy_ctl *ctl)
+{
+  return ctl->m_maxent;
+}
 
 /** Returns the ratio of entropy to maxentropy */
-float    get_entropy_ratio(void);
+static inline float get_entropy_ratio(struct entropy_ctl *ctl)
+{
+  return ctl->m_ratio;
+}
 
 #endif

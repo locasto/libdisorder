@@ -23,6 +23,7 @@
 
 #include "../include/disorder.h"
 #include <sys/stat.h> // to get file size in bytes for buffer
+#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,6 +54,7 @@ int
 main(int argc, 
      char* argv[])
 {
+  struct entropy_ctl ctl;
   float entropy_value = 0.0;
   char* filename = NULL;
   int fildes = -1;
@@ -60,11 +62,7 @@ main(int argc,
   struct stat stat_fd;
   long long file_size;
   char* buffer = NULL;
-  unsigned char c;
-  int x = 0;
-  char* itr=NULL;
   //long long i = 0;
-  long long how_many_bytes_read = 0L;
   int ret = 0;
   int verbose = 0; //be quiet by default
 
@@ -103,44 +101,48 @@ main(int argc,
     perror("main(): problem invoking fstat() of file");
   }
 
-  file_size = (long long)stat_fd.st_size;
+  /* Handle regular files and block devices differently */
+  if (S_ISREG(stat_fd.st_mode)) {
+    file_size = (long long)stat_fd.st_size;
+  } else if (S_ISBLK(stat_fd.st_mode)) {
+    /*
+     * st_size does not work for block devices
+     * seek to the end to determine size
+     */
+    file_size = (long long)lseek(fildes, 0, SEEK_END);
+    lseek(fildes, 0, SEEK_SET); /* Seek back to the beginning */
+  }
 
   if(verbose)
     fprintf(stdout,
 	    "file size: %lld (bytes)\n",
 	    file_size);
 
-  buffer = (char*)calloc(file_size, sizeof(char));
+  buffer = (char*)malloc(file_size * sizeof(char));
   if(NULL==buffer)
   {
     perror("main(): problem allocating buffer");
     return -2;
   }
 
-  //read the file into the buffer
-  itr = buffer;
-  //for(i=0;i<file_size;i++) //could also read until EOF
-  while(EOF!=(x=fgetc(fin)))
-  {
-    //x = fgetc(fin);
-    c = (unsigned char)x;
-    *itr = c;
-    itr++;
-    how_many_bytes_read++;
+  if (!fread(buffer, file_size, 1, fin)) {
+    perror("main: can't read the file");
+    return -1;
   }
   if(verbose)
     fprintf(stdout,
 	    "read %lld bytes\n",
-	    how_many_bytes_read);
+	    file_size);
 
-  entropy_value = shannon_H(buffer, how_many_bytes_read);
+  memset(&ctl, 0, sizeof(struct entropy_ctl));
+  entropy_value = shannon_H(&ctl, buffer, file_size);
   fprintf(stdout,
 	  "tokens: %d entropy: %f metric: %f maxent: %f ratio: %f\n",
-	  get_num_tokens(),
+	  get_num_tokens(&ctl),
 	  entropy_value,
-          entropy_value/how_many_bytes_read,
-	  get_max_entropy(),
-	  get_entropy_ratio()
+          entropy_value/file_size,
+	  get_max_entropy(&ctl),
+	  get_entropy_ratio(&ctl)
 	  );
 
   free(buffer);
