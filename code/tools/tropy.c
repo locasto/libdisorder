@@ -20,6 +20,9 @@
  *
  * $Id$
  **************************************************************************/
+/* Compiler preprocessor flags to support large files: */
+#define _FILE_OFFSET_BITS 64
+#define _LARGEFILE_SOURCE
 
 #include "../include/disorder.h"
 #include <string.h>
@@ -39,6 +42,8 @@ do_usage()
 	  "BLOCKSIZE default is %d.\n", DEFAULTBLOCKSIZE);
   fprintf(stderr,
 	  "Set BLOCKSIZE environment variable to change.\n");
+  fprintf(stderr,
+	  "Use filename \"-\" for stdin.\n");
 }
 
 
@@ -76,7 +81,15 @@ main(int argc,
     BLOCKSIZE = atoi(getenv("BLOCKSIZE"));
   }
 
-  fin = fopen(filename,"r");
+  if (strcmp(filename,"-")) 
+  {
+    fin = fopen(filename,"r");
+  }
+  else 
+  {
+    fin = stdin;
+  }
+  
   if(NULL==fin)
   {
     perror("main():");
@@ -122,4 +135,3 @@ main(int argc,
 
   return 0;
 }
-
